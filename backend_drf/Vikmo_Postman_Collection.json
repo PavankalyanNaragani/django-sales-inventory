@@ -1,0 +1,319 @@
+{
+	"info": {
+		"name": "Vikmo Sales Order & Inventory API",
+		"description": "Postman Collection for the Vikmo Fresher Assignment API endpoints.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Products",
+			"item": [
+				{
+					"name": "List Products",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/products/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sku\": \"BRK-001\",\n    \"name\": \"Brake Pad\",\n    \"description\": \"High quality ceramic brake pads.\",\n    \"current_price\": \"500.00\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/products/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Product Details",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/products/1/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"1",
+								""
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Inventory (Admin Only)",
+			"item": [
+				{
+					"name": "List Inventory Levels",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/inventory/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"inventory",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Manual Stock Adjustment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"available_quantity\": 100\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/inventory/1/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"inventory",
+								"1",
+								""
+							]
+						},
+						"description": "Note: In postman, you must add Basic Auth credentials (your superuser username/password) in the Authorization tab to use this endpoint."
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Dealers",
+			"item": [
+				{
+					"name": "List Dealers",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/dealers/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dealers",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Dealer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dealer_code\": \"DLR-ABC\",\n    \"name\": \"ABC Motors\",\n    \"email\": \"contact@abcmotors.com\",\n    \"phone\": \"9876543210\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/dealers/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dealers",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Dealer Details",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/dealers/1/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dealers",
+								"1",
+								""
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Orders",
+			"item": [
+				{
+					"name": "List Orders",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/orders/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Draft Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dealer\": 1,\n    \"items\": [\n        {\n            \"product\": 1,\n            \"quantity\": 10\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/orders/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Order Details",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/orders/1/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"1",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Draft Order",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dealer\": 1,\n    \"items\": [\n        {\n            \"product\": 1,\n            \"quantity\": 15\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/orders/1/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"1",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Confirm Order (Validates Stock)",
+					"request": {
+						"method": "POST",
+						"url": {
+							"raw": "{{base_url}}/orders/1/confirm/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"1",
+								"confirm",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Mark Order as Delivered",
+					"request": {
+						"method": "POST",
+						"url": {
+							"raw": "{{base_url}}/orders/1/deliver/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"1",
+								"deliver",
+								""
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000/api"
+		}
+	]
+}
