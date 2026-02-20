@@ -104,6 +104,7 @@ select_for_update()
 
 This prevents race conditions and ensures data consistency.
 
+
 ✔ 3. Order Status Flow Enforcement
 
 Valid transitions:
@@ -118,6 +119,7 @@ Confirmed → Draft ❌
 
 Draft → Delivered ❌
 
+
 ✔ 4. Order Editing Rules
 
 Draft orders → editable
@@ -126,11 +128,13 @@ Confirmed/Delivered orders → locked
 
 Editing non-draft order returns validation error
 
+
 ✔ 5. Price Preservation
 
 unit_price stored inside OrderItem
 
 Future changes in Product price do NOT affect past orders
+
 
 ✔ 6. Data Integrity & Constraints
 
@@ -143,6 +147,8 @@ One Inventory record per Product (OneToOneField)
 SKU is unique
 
 Order number is unique
+
+
 
 🛠 Tech Stack
 
@@ -164,20 +170,20 @@ vikmo-sales-inventory/
 ├── README.md
 │
 ├── config/
-│   ├── settings.py
-│   ├── urls.py
-│   └── ...
+│ ├── settings.py
+│ ├── urls.py
+│ └── ...
 │
 ├── core/
-│   ├── models.py
-│   ├── serializers.py
-│   ├── views.py
-│   ├── urls.py
-│   ├── signals.py
-│   └── ...
+│ ├── models.py
+│ ├── serializers.py
+│ ├── views.py
+│ ├── urls.py
+│ └── ...
+
 ⚙️ Setup Instructions (Step-by-Step)
 1️⃣ Clone Repository
-git clone https://github.com/your-username/vikmo-sales-inventory.git
+git clone https://github.com/PavankalyanNaragani/django-sales-inventory
 cd vikmo-sales-inventory
 
 Replace with your actual repository URL.
@@ -217,62 +223,62 @@ Base URL:
 
 /api/
 🧾 Products
-Method	Endpoint	Description
-GET	/api/products/	List all products with stock
-POST	/api/products/	Create product
-GET	/api/products/{id}/	Get product details
-PUT	/api/products/{id}/	Update product
-DELETE	/api/products/{id}/	Delete product
+Method Endpoint Description
+GET /api/products/ List all products with stock
+POST /api/products/ Create product
+GET /api/products/{id}/ Get product details
+PUT /api/products/{id}/ Update product
+DELETE /api/products/{id}/ Delete product
 🏢 Dealers
-Method	Endpoint	Description
-GET	/api/dealers/	List dealers
-POST	/api/dealers/	Create dealer
-GET	/api/dealers/{id}/	Dealer details
-PUT	/api/dealers/{id}/	Update dealer
+Method Endpoint Description
+GET /api/dealers/ List dealers
+POST /api/dealers/ Create dealer
+GET /api/dealers/{id}/ Dealer details
+PUT /api/dealers/{id}/ Update dealer
 📦 Orders
-Method	Endpoint	Description
-GET	/api/orders/	List orders
-POST	/api/orders/	Create draft order
-GET	/api/orders/{id}/	Order details
-PUT	/api/orders/{id}/	Update draft order
-POST	/api/orders/{id}/confirm/	Confirm order
-POST	/api/orders/{id}/deliver/	Mark as delivered
+Method Endpoint Description
+GET /api/orders/ List orders
+POST /api/orders/ Create draft order
+GET /api/orders/{id}/ Order details
+PUT /api/orders/{id}/ Update draft order
+POST /api/orders/{id}/confirm/ Confirm order
+POST /api/orders/{id}/deliver/ Mark as delivered
 📊 Inventory (Admin Only)
-Method	Endpoint	Description
-GET	/api/inventory/	List inventory
-PUT	/api/inventory/{product_id}/	Manual stock update
+Method Endpoint Description
+GET /api/inventory/ List inventory
+PUT /api/inventory/{product_id}/ Manual stock update
 📬 API Example Requests & Responses
 Create Product
 
 POST /api/products/
 
 {
-  "name": "Brake Pad",
-  "sku": "BRK001",
-  "price": 500
+"name": "Brake Pad",
+"sku": "BRK001",
+"price": 500
 }
 Create Dealer
 
 POST /api/dealers/
 
 {
-  "name": "ABC Motors",
-  "email": "abc@gmail.com",
-  "phone": "9999999999",
-  "address": "Hyderabad"
+"name": "ABC Motors",
+"email": "abc@gmail.com",
+"phone": "9999999999",
+"address": "Hyderabad"
 }
 Create Draft Order
 
 POST /api/orders/
 
 {
-  "dealer": 1,
-  "items": [
-    {
-      "product": 1,
-      "quantity": 10
-    }
-  ]
+"dealer": 1,
+"items": [
+{
+"product": 1,
+"quantity": 10
+}
+]
 }
 Confirm Order
 
@@ -281,19 +287,20 @@ POST /api/orders/1/confirm/
 Successful Response:
 
 {
-  "message": "Order confirmed successfully."
+"message": "Order confirmed successfully."
 }
 Insufficient Stock Response
 {
-  "error": "Insufficient stock for some products.",
-  "details": [
-    {
-      "product": "Brake Pad",
-      "available": 5,
-      "requested": 10
-    }
-  ]
+"error": "Insufficient stock for some products.",
+"details": [
+{
+"product": "Brake Pad",
+"available": 5,
+"requested": 10
 }
+]
+}
+
 📐 Database Design Summary
 Relationships
 
