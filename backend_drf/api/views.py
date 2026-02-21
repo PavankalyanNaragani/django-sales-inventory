@@ -80,10 +80,8 @@ class OrderViewSet(viewsets.ModelViewSet):
 
                 # 3. Reject Entire Order if ANY item fails validation
                 if errors:
-                    # Raising an exception forces the atomic block to rollback any changes
                     raise ValidationError({"errors": errors})
 
-                # 4. Save deducted inventory and update order status
                 for inv in inventories_to_update:
                     inv.save()
 
@@ -91,7 +89,6 @@ class OrderViewSet(viewsets.ModelViewSet):
                 order.save(update_fields=['status'])
 
         except ValidationError as e:
-            # Return the exact error messages collected during validation
             return Response(e.message_dict, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -120,28 +117,21 @@ class OrderViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def summary(self, request):
         """
-        Bonus: Order Summary/Report Endpoint
+        Order Summary/Report Endpoint
         Returns key metrics like total revenue and order counts by status.
         """
-        # 1. Total number of orders in the system
         total_orders = Order.objects.count()
 
-        # 2. Total revenue (Only count Confirmed and Delivered orders)
         revenue_data = Order.objects.filter(
             status__in=['Confirmed', 'Delivered']
         ).aggregate(total_revenue=Sum('total_amount'))
         
         # If there are no orders yet, Sum returns None, so we default to 0.00
         total_revenue = revenue_data['total_revenue'] or 0.00
-
-        # 3. Breakdown of orders by status
-        # This translates to: SELECT status, COUNT(id) GROUP BY status
         status_counts = Order.objects.values('status').annotate(count=Count('id'))
-        
-        # Convert the queryset [{'status': 'Draft', 'count': 2}, ...] into a clean dictionary
+
         status_breakdown = {item['status']: item['count'] for item in status_counts}
 
-        # 4. Compile the final report
         report = {
             "total_orders": total_orders,
             "total_revenue": total_revenue,
@@ -166,14 +156,6 @@ class InventoryViewSet(mixins.ListModelMixin,
                        viewsets.GenericViewSet):
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
-    
-    # Matches the model field to query against
     lookup_field = 'product'
-    
-    # Forces the URL router to use {product_id} in the path
-    # resulting in: PUT /api/inventory/{product_id}/
     lookup_url_kwarg = 'product_id' 
-    
-    # The assignment explicitly states "Inventory (Admin Only)", 
-    # so this is strictly required, not optional!
     permission_classes = [IsAdminUser]

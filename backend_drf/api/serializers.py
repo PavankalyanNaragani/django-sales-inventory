@@ -6,10 +6,9 @@ class InventorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Inventory
         fields = ['id', 'product', 'available_quantity', 'last_updated']
-        read_only_fields = ['product']  # Only allow updating the quantity via the admin API
+        read_only_fields = ['product']  
 
-class ProductSerializer(serializers.ModelSerializer):
-    # Fulfills requirement: "List all products with stock info" 
+class ProductSerializer(serializers.ModelSerializer): 
     available_stock = serializers.IntegerField(source='inventory.available_quantity', read_only=True)
 
     class Meta:
@@ -30,11 +29,9 @@ class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = ['id', 'product', 'quantity', 'unit_price', 'line_total']
-        # unit_price and line_total are auto-calculated by the model[cite: 86], so they must be read-only here
         read_only_fields = ['unit_price', 'line_total']
 
-class OrderSerializer(serializers.ModelSerializer):
-    # Fulfills requirement: "Get order with items" 
+class OrderSerializer(serializers.ModelSerializer): 
     items = OrderItemSerializer(many=True)
 
     class Meta:
@@ -62,20 +59,16 @@ class OrderSerializer(serializers.ModelSerializer):
         """
         Writable Nested Serializer: Handles updating a Draft order's items[cite: 78].
         """
-        # Business Rule: Prevent edits to Confirmed or Delivered orders 
         if instance.status != 'Draft':
             raise serializers.ValidationError("Only Draft orders can be updated.")
 
         items_data = validated_data.pop('items', None)
 
         with transaction.atomic():
-            # Update main order fields (like changing the dealer if needed)
             instance.dealer = validated_data.get('dealer', instance.dealer)
             instance.save()
 
             if items_data is not None:
-                # For simplicity and to ensure total accuracy, we clear existing items and recreate them
-                # This perfectly handles add/remove/update item requirements for Drafts [cite: 78]
                 instance.items.all().delete()
                 for item_data in items_data:
                     OrderItem.objects.create(order=instance, **item_data)
@@ -92,7 +85,6 @@ class DealerSerializer(serializers.ModelSerializer):
         fields = ['id', 'dealer_code', 'name', 'email', 'address', 'phone', 'recent_orders', 'created_at', 'updated_at']
 
     def get_recent_orders(self, obj):
-        # Fetch a simplified list of the dealer's orders
         orders = obj.orders.all().order_by('-created_at')
         return [
             {
